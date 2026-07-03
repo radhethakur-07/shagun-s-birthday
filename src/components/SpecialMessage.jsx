@@ -41,7 +41,7 @@ export default function SpecialMessage() {
         </p>
 
         <div className="message-signature">
-          — Your friend, always 🌸
+          — Hariom Your friend, always 🌸
         </div>
 
         <div className="message-hearts">
