@@ -139,11 +139,46 @@ body {
 }
 
 @keyframes knifeSlice {
-  0% { transform: translateX(150px) translateY(-80px) rotate(-30deg); opacity: 0; }
-  30% { opacity: 1; }
-  60% { transform: translateX(0px) translateY(0px) rotate(-10deg); }
-  80% { transform: translateX(-10px) translateY(5px) rotate(-5deg); }
-  100% { transform: translateX(0px) translateY(0px) rotate(-10deg); }
+  0%   { transform: translate(120px, -120px) rotate(40deg); opacity: 0; }
+  20%  { opacity: 1; }
+  55%  { transform: translate(-8px, 8px) rotate(6deg); }
+  75%  { transform: translate(4px, 3px) rotate(9deg); }
+  100% { transform: translate(0px, 0px) rotate(7deg); }
+}
+
+@keyframes teddyBounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%       { transform: translateY(-10px) rotate(-2.5deg); }
+  75%       { transform: translateY(-5px) rotate(2.5deg); }
+}
+
+@keyframes teddyCelebrate {
+  0%, 100% { transform: translateY(0)   scale(1)    rotate(0deg); }
+  20%      { transform: translateY(-22px) scale(1.06) rotate(-5deg); }
+  40%      { transform: translateY(-10px) scale(1.02) rotate(5deg); }
+  60%      { transform: translateY(-20px) scale(1.05) rotate(-3deg); }
+  80%      { transform: translateY(-8px)  scale(1.01) rotate(3deg); }
+}
+
+@keyframes blowBubble {
+  0%   { transform: scale(0) translateX(0);   opacity: 0.7; }
+  50%  { opacity: 0.45; }
+  100% { transform: scale(1.6) translateX(18px); opacity: 0; }
+}
+
+@keyframes plateSlide {
+  0%   { transform: translateX(0)   translateY(0)   rotate(0deg); }
+  100% { transform: translateX(40px) translateY(18px) rotate(14deg); }
+}
+
+@keyframes knifeWobble {
+  0%, 100% { transform: translate(0, 0) rotate(7deg); }
+  50%      { transform: translate(0, 3px) rotate(5deg); }
+}
+
+@keyframes phaseMsg {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes sliceReveal {
@@ -442,61 +477,49 @@ body {
   background: linear-gradient(90deg, transparent, var(--pink), var(--purple), transparent);
 }
 
-.cake-container {
-  max-width: 600px;
+/* Stage: teddy + cake side by side */
+.cake-stage {
+  max-width: 680px;
   margin: 0 auto;
-  text-align: center;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  position: relative;
 }
 
-.cake-wrapper {
+.teddy-col {
+  flex: 0 0 auto;
+  width: min(175px, 38vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cake-col {
+  flex: 0 0 auto;
+  width: min(260px, 52vw);
   position: relative;
-  display: inline-block;
   cursor: pointer;
-  margin: 2rem 0;
-  transition: transform var(--transition);
   user-select: none;
 }
-
-.cake-wrapper:hover .cake-svg {
-  filter: drop-shadow(0 0 30px rgba(255, 107, 181, 0.6));
+.cake-col[data-idle='false'] {
+  cursor: default;
 }
 
-.cake-svg {
-  width: 280px;
-  height: auto;
-  filter: drop-shadow(0 0 15px rgba(255, 107, 181, 0.4));
-  transition: filter var(--transition);
+.cake-stage-bottom {
+  text-align: center;
+  margin-top: 1.5rem;
+  min-height: 5rem;
 }
 
-@media (max-width: 480px) {
-  .cake-svg { width: 220px; }
-}
-
-.candle-flame {
-  animation: candle-flame 0.8s ease-in-out infinite, flameGlow 1.2s ease-in-out infinite;
-  transform-origin: bottom center;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.smoke-puff {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  background: rgba(200, 200, 220, 0.6);
-  border-radius: 50%;
-  animation: smokeRise 1.2s ease-out forwards;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.cake-instruction {
-  font-size: 1.1rem;
-  color: var(--text-muted);
-  margin-top: 0.5rem;
-  animation: heartbeat 2s ease-in-out infinite;
-  font-weight: 300;
+.phase-msg {
+  font-size: 1.05rem;
+  font-weight: 400;
+  transition: color 0.5s ease;
+  animation: phaseMsg 0.4s ease both;
+  min-height: 1.6em;
 }
 
 .cake-wish-text {
@@ -507,21 +530,48 @@ body {
   margin-top: 1rem;
 }
 
-/* ===== CONFETTI ===== */
-.confetti-container {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1000;
-  overflow: hidden;
+.reset-btn {
+  margin-top: 1.2rem;
+  background: linear-gradient(135deg, var(--pink-dark), var(--purple-dark));
+  color: white;
+  border: none;
+  padding: 0.65rem 1.8rem;
+  border-radius: var(--radius-full);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.reset-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 8px 25px rgba(255, 107, 181, 0.5);
 }
 
-.confetti-piece {
+/* Knife overlay */
+.knife-wrap {
   position: absolute;
-  top: -20px;
-  border-radius: 2px;
-  animation: confettiFall linear both;
+  top: 50px;
+  right: -15px;
+  width: 65px;
+  z-index: 20;
+  pointer-events: none;
+  animation: knifeSlice 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transform-origin: top right;
 }
+.knife-wrap.idle-knife {
+  animation: knifeWobble 2.5s ease-in-out infinite;
+}
+
+@media (max-width: 600px) {
+  .cake-stage {
+    gap: 0.25rem;
+  }
+  .teddy-col { width: min(140px, 36vw); }
+  .cake-col  { width: min(200px, 52vw); }
+  .knife-wrap { right: -10px; width: 50px; }
+}
+
+/* (legacy cake classes removed — now handled in CakeCutting.jsx inline styles) */
 
 /* ===== SPECIAL MESSAGE ===== */
 .message-section {
