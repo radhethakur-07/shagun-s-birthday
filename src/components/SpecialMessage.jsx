@@ -25,7 +25,7 @@ export default function SpecialMessage() {
           <span className="highlight">smile, your laugh, your warmth</span>{' '}
           — everything about you is absolutely wonderful.
           <br /><br />
-          You're not just a <span className="highlight">new friend</span>;
+          You're not just a <span className="highlight">friend</span>;
           you're already someone who makes ordinary moments feel brighter
           just by being around. The world is a genuinely better place
           with you in it, and I feel so lucky our paths crossed. 💕
@@ -41,7 +41,7 @@ export default function SpecialMessage() {
         </p>
 
         <div className="message-signature">
-          — Hariom Your friend, always 🌸
+          — Hariom Your special, always 🌸
         </div>
 
         <div className="message-hearts">
